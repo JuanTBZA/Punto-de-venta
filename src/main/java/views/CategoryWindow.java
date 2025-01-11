@@ -2,20 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package views;
+
+import controllers.CategoryController;
+import models.Category;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.LinkedHashMap;
+import java.io.IOException;
+import java.util.List;
 
 public class CategoryWindow extends JFrame {
 
     private final DefaultTableModel tableModel;
+    private final CategoryController controller;
 
-    public CategoryWindow() {
+    public CategoryWindow(CategoryController controller) {
+        this.controller = controller;
+
         setTitle("Gestión de Categorías");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -59,68 +65,110 @@ public class CategoryWindow extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         // Listeners
-        addButton.addActionListener(e -> openDialog("Agregar Categoría", null));
-        editButton.addActionListener(e -> {
-            int selectedRow = categoryTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String[] initialValues = {
-                        tableModel.getValueAt(selectedRow, 0).toString(),
-                        tableModel.getValueAt(selectedRow, 1).toString(),
-                        tableModel.getValueAt(selectedRow, 2).toString()
-                };
-                openDialog("Editar Categoría", initialValues);
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona una categoría para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        });
-        deleteButton.addActionListener(e -> {
-            int selectedRow = categoryTable.getSelectedRow();
-            if (selectedRow != -1) {
-                int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar esta categoría?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                if (confirmation == JOptionPane.YES_OPTION) {
-                    tableModel.removeRow(selectedRow);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona una categoría para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        });
+        addButton.addActionListener(e -> openAddDialog());
+        editButton.addActionListener(e -> openEditDialog(categoryTable));
+        deleteButton.addActionListener(e -> deleteSelectedCategory(categoryTable));
+
+        // Cargar datos iniciales
+        loadCategories();
     }
 
-    private void openDialog(String title, String[] initialValues) {
-        LinkedHashMap<String, String> fields = new LinkedHashMap<>();
-        fields.put("id", "ID");
-        fields.put("name", "Nombre");
-        fields.put("description", "Descripción");
+    private void loadCategories() {
+        try {
+            tableModel.setRowCount(0);
+            List<Category> categories = controller.listCategories();
+            for (Category category : categories) {
+                tableModel.addRow(new Object[]{category.getId(), category.getName(), category.getDescription()});
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las categorías: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-        EntityDialog dialog = new EntityDialog(this, title, fields, initialValues);
-        dialog.setVisible(true);
+    private void openAddDialog() {
+        JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+        JTextField nameField = new JTextField();
+        JTextField descriptionField = new JTextField();
 
-        if (dialog.isConfirmed()) {
-            LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
-            if (initialValues == null) { // Agregar
-                tableModel.addRow(new Object[]{
-                        fieldValues.get("id"),
-                        fieldValues.get("name"),
-                        fieldValues.get("description")
-                });
-            } else { // Editar
-                int selectedRow = getSelectedRowById(fieldValues.get("id"));
-                if (selectedRow != -1) {
-                    tableModel.setValueAt(fieldValues.get("id"), selectedRow, 0);
-                    tableModel.setValueAt(fieldValues.get("name"), selectedRow, 1);
-                    tableModel.setValueAt(fieldValues.get("description"), selectedRow, 2);
+        panel.add(new JLabel("Nombre:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Descripción:"));
+        panel.add(descriptionField);
+
+        int option = JOptionPane.showConfirmDialog(this, panel, "Agregar Categoría", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (option == JOptionPane.OK_OPTION) {
+            String name = nameField.getText().trim();
+            String description = descriptionField.getText().trim();
+
+            if (!name.isEmpty() && !description.isEmpty()) {
+                try {
+                    controller.addCategory(name, description);
+                    loadCategories();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "Error al agregar la categoría: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor ingresa un nombre y una descripción.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
 
-    private int getSelectedRowById(String id) {
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            if (tableModel.getValueAt(i, 0).toString().equals(id)) {
-                return i;
+    private void openEditDialog(JTable categoryTable) {
+        int selectedRow = categoryTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tableModel.getValueAt(selectedRow, 0);
+            String currentName = (String) tableModel.getValueAt(selectedRow, 1);
+            String currentDescription = (String) tableModel.getValueAt(selectedRow, 2);
+
+            JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+            JTextField nameField = new JTextField(currentName);
+            JTextField descriptionField = new JTextField(currentDescription);
+
+            panel.add(new JLabel("Nuevo Nombre:"));
+            panel.add(nameField);
+            panel.add(new JLabel("Nueva Descripción:"));
+            panel.add(descriptionField);
+
+            int option = JOptionPane.showConfirmDialog(this, panel, "Editar Categoría", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (option == JOptionPane.OK_OPTION) {
+                String newName = nameField.getText().trim();
+                String newDescription = descriptionField.getText().trim();
+
+                if (!newName.isEmpty() && !newDescription.isEmpty()) {
+                    try {
+                        controller.updateCategory(id, newName, newDescription);
+                        loadCategories();
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(this, "Error al actualizar la categoría: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Por favor ingresa un nuevo nombre y descripción.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una categoría para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-        return -1;
+    }
+
+    private void deleteSelectedCategory(JTable categoryTable) {
+        int selectedRow = categoryTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tableModel.getValueAt(selectedRow, 0);
+
+            int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar esta categoría?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            if (confirmation == JOptionPane.YES_OPTION) {
+                try {
+                    controller.deleteCategory(id);
+                    loadCategories();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar la categoría: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una categoría para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void styleButton(JButton button, Color backgroundColor) {
@@ -129,10 +177,6 @@ public class CategoryWindow extends JFrame {
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new CategoryWindow().setVisible(true));
     }
 }
 

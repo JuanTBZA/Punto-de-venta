@@ -6,13 +6,19 @@ package views;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import controllers.BrandController;
+import controllers.CategoryController;
+import controllers.ClientController;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import repositories.BrandRepositoryImpl;
+import repositories.CategoryRepositoryImpl;
+import repositories.ClientRepositoryImpl;
 import services.BrandServiceImpl;
+import services.CategoryServiceImpl;
+import services.ClientServiceImpl;
 import utilities.ExcelDatabaseConnection;
 
 public class MainApplication extends JFrame {
@@ -51,17 +57,25 @@ public class MainApplication extends JFrame {
 
         // Crear instancias necesarias para Brands
         ExcelDatabaseConnection conection = new ExcelDatabaseConnection();
+        
         BrandRepositoryImpl brandRepository = new BrandRepositoryImpl(conection);
         BrandServiceImpl brandService =new BrandServiceImpl(brandRepository);
         BrandController brandController = new BrandController(brandService);
-       
+        
+        CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl(conection);
+        CategoryServiceImpl categoryService =new CategoryServiceImpl(categoryRepository);
+        CategoryController categoryController = new CategoryController(categoryService);
+        
+        ClientRepositoryImpl clientRepository = new ClientRepositoryImpl(conection);
+        ClientServiceImpl clientService =new ClientServiceImpl(clientRepository);
+        ClientController clientController = new ClientController(clientService);
 
         // Listeners para abrir ventanas específicas
         productsButton.addActionListener(e -> new ProductWindow().setVisible(true));
-        categoriesButton.addActionListener(e -> new CategoryWindow().setVisible(true));
+        categoriesButton.addActionListener(e -> new CategoryWindow(categoryController).setVisible(true));
         brandsButton.addActionListener(e -> new BrandWindow(brandController).setVisible(true));
 
-        clientsButton.addActionListener(e -> new ClientWindow().setVisible(true));
+        clientsButton.addActionListener(e -> new ClientWindow(clientController).setVisible(true));
         salesButton.addActionListener(e -> new SalesWindow().setVisible(true));
 
         // Configurar el frame

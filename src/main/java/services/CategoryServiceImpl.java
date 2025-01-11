@@ -1,15 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package services;
+import java.io.IOException;
+import java.util.List;
+import models.Category;
+import repositories.CategoryRepositoryImpl;
+import services.CategoryService;
 
-import repositories.*;
+public class CategoryServiceImpl implements CategoryService {
 
-/**
- *
- * @author usuario
- */
-public class CategoryServiceImpl {
-    
+    private final CategoryRepositoryImpl repository;
+
+    public CategoryServiceImpl(CategoryRepositoryImpl repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public List<Category> getAllCategories() throws IOException {
+        return repository.findAll();
+    }
+
+    @Override
+    public void addCategory(Category category) throws IOException {
+        repository.add(category);
+    }
+
+    @Override
+    public void updateCategory(int id, String newName, String newDescription) throws IOException {
+        repository.update(id, newName, newDescription);
+    }
+
+    @Override
+    public void deleteCategory(int id) throws IOException {
+        repository.delete(id);
+    }
+
+    @Override
+    public Category findById(int id) throws IOException {
+        return repository.findById(id);
+    }
 }

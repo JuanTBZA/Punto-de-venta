@@ -2,12 +2,14 @@ models\Category.class
 repositories\BrandRepositoryImpl.class
 repositories\CategoryRepositoryImpl.class
 repositories\ClientRepository.class
+services\ProductServiceImpl.class
 Main.class
 views\SalesWindow.class
 controllers\CategoryController.class
 services\BrandService.class
 controllers\ProductController.class
 views\CategoryWindow.class
+services\ClientServiceImpl.class
 views\EntityDialog.class
 services\BrandServiceImpl.class
 models\Client.class
@@ -18,7 +20,6 @@ repositories\ProductRepositoryImpl.class
 repositories\ClientRepositoryImpl.class
 repositories\ProductRepository.class
 views\BrandWindow.class
-services\ClientRepositoryImpl.class
 services\ProductService.class
 services\ClientService.class
 models\Product.class
@@ -26,7 +27,6 @@ views\ClientWindow.class
 controllers\ClientController.class
 repositories\BrandRepository.class
 utilities\ExcelDatabaseConnection.class
-services\ProductRepositoryImpl.class
 services\CategoryServiceImpl.class
 views\ProductWindow.class
 models\Brand.class

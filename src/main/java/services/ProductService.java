@@ -4,12 +4,16 @@
  */
 package services;
 
-import repositories.*;
+import java.io.IOException;
+import java.util.List;
+import models.Product;
 
-/**
- *
- * @author usuario
- */
 public interface ProductService {
-    
+
+    public List<Product> getAllProducts() throws IOException;
+    public void addProduct(Product product) throws IOException ;
+    public void updateProduct(int id, String newName, int newCategoryId, int newBrandId, int newStock, int newPrice) throws IOException ;
+    public void deleteProduct(int id) throws IOException ;
+    public Product findById(int id) throws IOException ;
+
 }

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.List;
 import models.Brand;
 
-
 public interface BrandService {
 
     public List<Brand> getAllBrands() throws IOException;
@@ -18,8 +17,6 @@ public interface BrandService {
     public void updateBrand(int id, String newName) throws IOException;
 
     public void deleteBrand(int id) throws IOException;
-
-  
 
     public Brand findById(int id) throws IOException;
 }

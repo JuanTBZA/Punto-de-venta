@@ -8,10 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
-import repositories.BrandRepositoryImpl;
-import services.BrandService;
-import services.BrandServiceImpl;
-import utilities.ExcelDatabaseConnection;
 
 public class BrandWindow extends JFrame {
 

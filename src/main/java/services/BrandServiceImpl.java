@@ -10,10 +10,9 @@ import java.io.IOException;
 import java.util.List;
 import models.Brand;
 
+public class BrandServiceImpl implements BrandService {
 
-public class BrandServiceImpl implements BrandService{
-    
-    private final BrandRepositoryImpl  repository;
+    private final BrandRepositoryImpl repository;
 
     public BrandServiceImpl(BrandRepositoryImpl repository) {
         this.repository = repository;
@@ -39,11 +38,8 @@ public class BrandServiceImpl implements BrandService{
         repository.delete(id);
     }
 
-
-    
     @Override
-        public Brand findById(int id) throws IOException {
+    public Brand findById(int id) throws IOException {
         return repository.findById(id);
     }
 }
-

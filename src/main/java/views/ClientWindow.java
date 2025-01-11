@@ -4,16 +4,23 @@
  */
 package views;
 
+import controllers.ClientController;
+import models.Client;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.LinkedHashMap;
+import java.io.IOException;
+import java.util.List;
 
 public class ClientWindow extends JFrame {
 
     private final DefaultTableModel tableModel;
+    private final ClientController controller;
 
-    public ClientWindow() {
+    public ClientWindow(ClientController controller) {
+        this.controller = controller;
+
         setTitle("Gestión de Clientes");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -32,7 +39,7 @@ public class ClientWindow extends JFrame {
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
         // Tabla
-        String[] columnNames = {"ID", "Nombres", "DNI", "Apodo"};
+        String[] columnNames = {"ID", "Nombre", "DNI", "Apodo"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable clientTable = new JTable(tableModel);
         clientTable.setRowHeight(25);
@@ -57,72 +64,119 @@ public class ClientWindow extends JFrame {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         // Listeners
-        addButton.addActionListener(e -> openDialog("Agregar Cliente", null));
-        editButton.addActionListener(e -> {
-            int selectedRow = clientTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String[] initialValues = {
-                        tableModel.getValueAt(selectedRow, 0).toString(),
-                        tableModel.getValueAt(selectedRow, 1).toString(),
-                        tableModel.getValueAt(selectedRow, 2).toString(),
-                        tableModel.getValueAt(selectedRow, 3).toString()
-                };
-                openDialog("Editar Cliente", initialValues);
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona un cliente para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        });
-        deleteButton.addActionListener(e -> {
-            int selectedRow = clientTable.getSelectedRow();
-            if (selectedRow != -1) {
-                int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar este cliente?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                if (confirmation == JOptionPane.YES_OPTION) {
-                    tableModel.removeRow(selectedRow);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona un cliente para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        });
+        addButton.addActionListener(e -> openAddDialog());
+        editButton.addActionListener(e -> openEditDialog(clientTable));
+        deleteButton.addActionListener(e -> deleteSelectedClient(clientTable));
+
+        // Cargar datos iniciales
+        loadClients();
     }
 
-    private void openDialog(String title, String[] initialValues) {
-        LinkedHashMap<String, String> fields = new LinkedHashMap<>();
-        fields.put("id", "ID");
-        fields.put("firstName", "Nombres");
-        fields.put("dni", "DNI");
-        fields.put("nickname", "Apodo");
+    private void loadClients() {
+        try {
+            tableModel.setRowCount(0);
+            List<Client> clients = controller.listClients();
+            for (Client client : clients) {
+                tableModel.addRow(new Object[]{client.getId(), client.getName(), client.getDni(), client.getNickname()});
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los clientes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-        EntityDialog dialog = new EntityDialog(this, title, fields, initialValues);
-        dialog.setVisible(true);
+    private void openAddDialog() {
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JTextField nameField = new JTextField();
+        JTextField dniField = new JTextField();
+        JTextField nicknameField = new JTextField();
 
-        if (dialog.isConfirmed()) {
-            LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
-            if (initialValues == null) { // Agregar
-                tableModel.addRow(new Object[]{
-                        fieldValues.get("id"),
-                        fieldValues.get("firstName"),
-                        fieldValues.get("dni"),
-                        fieldValues.get("nickname")
-                });
-            } else { // Editar
-                int selectedRow = getSelectedRowById(fieldValues.get("id"));
-                if (selectedRow != -1) {
-                    tableModel.setValueAt(fieldValues.get("id"), selectedRow, 0);
-                    tableModel.setValueAt(fieldValues.get("firstName"), selectedRow, 1);
-                    tableModel.setValueAt(fieldValues.get("dni"), selectedRow, 2);
-                    tableModel.setValueAt(fieldValues.get("nickname"), selectedRow, 3);
+        panel.add(new JLabel("Nombre:"));
+        panel.add(nameField);
+        panel.add(new JLabel("DNI:"));
+        panel.add(dniField);
+        panel.add(new JLabel("Apodo:"));
+        panel.add(nicknameField);
+
+        int option = JOptionPane.showConfirmDialog(this, panel, "Agregar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (option == JOptionPane.OK_OPTION) {
+            String name = nameField.getText().trim();
+            String dni = dniField.getText().trim();
+            String nickname = nicknameField.getText().trim();
+
+            if (!name.isEmpty() && !dni.isEmpty() && !nickname.isEmpty()) {
+                try {
+                    controller.addClient(name, dni, nickname);
+                    loadClients();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "Error al agregar el cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor ingresa un nombre, DNI y apodo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
 
-    private int getSelectedRowById(String id) {
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            if (tableModel.getValueAt(i, 0).toString().equals(id)) {
-                return i;
+    private void openEditDialog(JTable clientTable) {
+        int selectedRow = clientTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tableModel.getValueAt(selectedRow, 0);
+            String currentName = (String) tableModel.getValueAt(selectedRow, 1);
+            String currentDni = (String) tableModel.getValueAt(selectedRow, 2);
+            String currentNickname = (String) tableModel.getValueAt(selectedRow, 3);
+
+            JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+            JTextField nameField = new JTextField(currentName);
+            JTextField dniField = new JTextField(currentDni);
+            JTextField nicknameField = new JTextField(currentNickname);
+
+            panel.add(new JLabel("Nuevo Nombre:"));
+            panel.add(nameField);
+            panel.add(new JLabel("Nuevo DNI:"));
+            panel.add(dniField);
+            panel.add(new JLabel("Nuevo Apodo:"));
+            panel.add(nicknameField);
+
+            int option = JOptionPane.showConfirmDialog(this, panel, "Editar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (option == JOptionPane.OK_OPTION) {
+                String newName = nameField.getText().trim();
+                String newDni = dniField.getText().trim();
+                String newNickname = nicknameField.getText().trim();
+
+                if (!newName.isEmpty() && !newDni.isEmpty() && !newNickname.isEmpty()) {
+                    try {
+                        controller.updateClient(id, newName, newDni, newNickname);
+                        loadClients();
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(this, "Error al actualizar el cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Por favor ingresa un nuevo nombre, DNI y apodo.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona un cliente para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-        return -1;
+    }
+
+    private void deleteSelectedClient(JTable clientTable) {
+        int selectedRow = clientTable.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tableModel.getValueAt(selectedRow, 0);
+
+            int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar este cliente?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            if (confirmation == JOptionPane.YES_OPTION) {
+                try {
+                    controller.deleteClient(id);
+                    loadClients();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "Error al eliminar el cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona un cliente para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void styleButton(JButton button, Color backgroundColor) {
@@ -132,8 +186,5 @@ public class ClientWindow extends JFrame {
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ClientWindow().setVisible(true));
-    }
 }
+

@@ -10,16 +10,15 @@ C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\views
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\views\EntityDialog.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\repositories\ClientRepositoryImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\CategoryService.java
-C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\ProductRepositoryImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\repositories\BrandRepositoryImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\views\SalesWindow.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\repositories\BrandRepository.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\repositories\ProductRepositoryImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\repositories\CategoryRepository.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\controllers\ProductController.java
-C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\ClientRepositoryImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\views\MainApplication.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\models\Product.java
+C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\ClientServiceImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\controllers\CategoryController.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\models\Category.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\ProductService.java
@@ -27,6 +26,7 @@ C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\model
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\views\CategoryWindow.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\repositories\CategoryRepositoryImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\BrandServiceImpl.java
+C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\ProductServiceImpl.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\controllers\ClientController.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\Main.java
 C:\Users\usuario\Documents\NetBeansProjects\CorporacionesEli\src\main\java\services\ClientService.java
