@@ -11,18 +11,20 @@ package models;
 public class Product {
     private int id;
     private String name;
-    private int idCategory;
-    private int idBrand;
+    private String categoryName;
+    private String brandName;
     private int stock;
     private int price;
+    private String location;
 
-    public Product(int id, String name, int idCategory, int idBrand, int stock, int price) {
+    public Product(int id, String name, String categoryName, String brandName, int stock, int price, String location) {
         this.id = id;
         this.name = name;
-        this.idCategory = idCategory;
-        this.idBrand = idBrand;
+        this.categoryName = categoryName;
+        this.brandName = brandName;
         this.stock = stock;
         this.price = price;
+        this.location = location;
     }
 
     public int getId() {
@@ -41,20 +43,20 @@ public class Product {
         this.name = name;
     }
 
-    public int getIdCategory() {
-        return idCategory;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setIdCategory(int idCategory) {
-        this.idCategory = idCategory;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public int getIdBrand() {
-        return idBrand;
+    public String getBrandName() {
+        return brandName;
     }
 
-    public void setIdBrand(int idBrand) {
-        this.idBrand = idBrand;
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public int getStock() {
@@ -72,7 +74,15 @@ public class Product {
     public void setPrice(int price) {
         this.price = price;
     }
-    
-    
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+  
     
 }

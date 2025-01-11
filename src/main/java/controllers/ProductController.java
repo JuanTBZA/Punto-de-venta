@@ -22,13 +22,13 @@ public class ProductController {
         return service.getAllProducts();
     }
 
-    public void addProduct(String name, int categoryId, int brandId, int stock, int price) throws IOException {
-        Product newProduct = new Product(0, name, categoryId, brandId, stock, price); // El ID se asignará automáticamente
+    public void addProduct(String name, String categoryName, String brandName, int stock, int price, String location) throws IOException {
+        Product newProduct = new Product(0, name, categoryName, brandName, stock, price, location); // El ID se asignará automáticamente
         service.addProduct(newProduct);
     }
 
-    public void updateProduct(int id, String newName, int newCategoryId, int newBrandId, int newStock, int newPrice) throws IOException {
-        service.updateProduct(id, newName, newCategoryId, newBrandId, newStock, newPrice);
+    public void updateProduct(int id, String newName, String categoryName, String brandName, int newStock, int newPrice, String newLocation) throws IOException {
+        service.updateProduct(id, newName, categoryName, brandName, newStock, newPrice, newLocation);
         System.out.println("Product updated successfully!");
     }
 
@@ -41,35 +41,4 @@ public class ProductController {
         return service.findById(id);
     }
     
-     public Map<String, String> getProductDetailsWithNames(List<Product> products, List<Category> categories, List<Brand> brands) {
-        Map<String, String> productDetailsMap = new HashMap<>();
-
-        // Crear mapas para acceder a las categorías y marcas por ID
-        Map<Integer, String> categoryMap = new HashMap<>();
-        Map<Integer, String> brandMap = new HashMap<>();
-
-        // Llenar el mapa de categorías con los ID de categorías y sus nombres
-        for (Category category : categories) {
-            categoryMap.put(category.getId(), category.getName());
-        }
-
-        // Llenar el mapa de marcas con los ID de marcas y sus nombres
-        for (Brand brand : brands) {
-            brandMap.put(brand.getId(), brand.getName());
-        }
-
-        // Procesar la lista de productos y agregar la categoría y marca correspondientes
-        for (Product product : products) {
-            String categoryName = categoryMap.get(product.getIdCategory());
-            String brandName = brandMap.get(product.getIdBrand());
-
-            if (categoryName != null && brandName != null) {
-                // Crear el mapa de detalles del producto con los nombres
-                String details = "Category: " + categoryName + ", Brand: " + brandName;
-                productDetailsMap.put(product.getName(), details);
-            }
-        }
-
-        return productDetailsMap;
-    }
 }

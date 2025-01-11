@@ -88,7 +88,7 @@ public class SalesWindow extends JFrame {
     }
 
     private void openDialog(String title, String[] initialValues) {
-        LinkedHashMap<String, String> fields = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
         fields.put("id", "ID Venta");
         fields.put("product", "Producto");
         fields.put("client", "Cliente");
@@ -141,7 +141,5 @@ public class SalesWindow extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new SalesWindow().setVisible(true));
-    }
+
 }

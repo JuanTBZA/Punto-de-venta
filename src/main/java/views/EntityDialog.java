@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package views;
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +6,10 @@ import java.util.Map;
 
 public class EntityDialog extends JDialog {
 
-    private final LinkedHashMap<String, JTextField> fieldMap = new LinkedHashMap<>();
+    private final LinkedHashMap<String, JComponent> fieldMap = new LinkedHashMap<>();
     private boolean confirmed;
 
-    public EntityDialog(Frame owner, String title, LinkedHashMap<String, String> fields, String[] initialValues) {
+    public EntityDialog(Frame owner, String title, LinkedHashMap<String, Object> fields, Object[] initialValues) {
         super(owner, title, true);
         setSize(400, 500);
         setLocationRelativeTo(owner);
@@ -45,17 +41,33 @@ public class EntityDialog extends JDialog {
         fieldPanel.setOpaque(false);
 
         int index = 0;
-        for (Map.Entry<String, String> entry : fields.entrySet()) {
+        for (Map.Entry<String, Object> entry : fields.entrySet()) {
             String key = entry.getKey();
-            String label = entry.getValue();
-            JLabel fieldLabel = new JLabel(label + ":");
+            Object value = entry.getValue();
+
+            JLabel fieldLabel = new JLabel(value.toString() + ":");
             fieldLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-            JTextField textField = new JTextField(initialValues != null ? initialValues[index++] : "");
-            textField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true));
-            textField.setFont(new Font("SansSerif", Font.PLAIN, 14));
             fieldPanel.add(fieldLabel);
-            fieldPanel.add(textField);
-            fieldMap.put(key, textField);
+
+            // Determina si el campo es un JTextField o JComboBox
+            JComponent fieldComponent;
+            if (value instanceof String[]) { // Si es un JComboBox
+                String[] options = (String[]) value;
+                JComboBox<String> comboBox = new JComboBox<>(options);
+                if (initialValues != null && initialValues[index] instanceof String) {
+                    comboBox.setSelectedItem(initialValues[index]);
+                }
+                fieldComponent = comboBox;
+            } else { // Si es un JTextField
+                JTextField textField = new JTextField(initialValues != null ? initialValues[index].toString() : "");
+                textField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true));
+                textField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+                fieldComponent = textField;
+            }
+
+            fieldPanel.add(fieldComponent);
+            fieldMap.put(key, fieldComponent);
+            index++;
         }
 
         mainPanel.add(fieldPanel, BorderLayout.CENTER);
@@ -103,7 +115,13 @@ public class EntityDialog extends JDialog {
 
     public LinkedHashMap<String, String> getFieldValues() {
         LinkedHashMap<String, String> values = new LinkedHashMap<>();
-        fieldMap.forEach((key, field) -> values.put(key, field.getText()));
+        fieldMap.forEach((key, field) -> {
+            if (field instanceof JTextField) {
+                values.put(key, ((JTextField) field).getText());
+            } else if (field instanceof JComboBox) {
+                values.put(key, ((JComboBox<?>) field).getSelectedItem().toString());
+            }
+        });
         return values;
     }
 }

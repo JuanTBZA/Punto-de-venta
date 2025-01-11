@@ -55,7 +55,7 @@ public class ExcelDatabaseConnection {
                 headers = new String[]{"ID", "Name", "Description"};
                 break;
             case "Product":
-                headers = new String[]{"ID", "Name", "Category ID", "Brand ID", "Stock", "Price"};
+                headers = new String[]{"ID", "Name", "Category ID", "Brand ID", "Stock", "Price", "Location"};
                 break;
             default:
                 return; // Si no se encuentra la hoja, no hace nada

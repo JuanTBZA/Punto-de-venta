@@ -1,9 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package repositories;
-
 
 import models.Product;
 import org.apache.poi.ss.usermodel.*;
@@ -14,7 +9,7 @@ import java.util.List;
 import utilities.ExcelDatabaseConnection;
 
 public class ProductRepositoryImpl implements ProductRepository {
-    
+
     private final ExcelDatabaseConnection connection;
 
     public ProductRepositoryImpl(ExcelDatabaseConnection connection) {
@@ -29,11 +24,12 @@ public class ProductRepositoryImpl implements ProductRepository {
             if (row.getRowNum() == 0) continue; // Skip header
             int id = (int) row.getCell(0).getNumericCellValue();
             String name = row.getCell(1).getStringCellValue();
-            int idCategory = (int) row.getCell(2).getNumericCellValue();
-            int idBrand = (int) row.getCell(3).getNumericCellValue();
+            String categoryName = row.getCell(2).getStringCellValue();
+            String brandName = row.getCell(3).getStringCellValue();
             int stock = (int) row.getCell(4).getNumericCellValue();
             int price = (int) row.getCell(5).getNumericCellValue();
-            products.add(new Product(id, name, idCategory, idBrand, stock, price));
+            String location = row.getCell(6).getStringCellValue();
+            products.add(new Product(id, name, categoryName, brandName, stock, price,location));
         }
         return products;
     }
@@ -56,16 +52,17 @@ public class ProductRepositoryImpl implements ProductRepository {
         Row newRow = sheet.createRow(sheet.getLastRowNum() + 1);
         newRow.createCell(0).setCellValue(newId); // Generated ID
         newRow.createCell(1).setCellValue(product.getName()); // Product Name
-        newRow.createCell(2).setCellValue(product.getIdCategory()); // Category ID
-        newRow.createCell(3).setCellValue(product.getIdBrand()); // Brand ID
+        newRow.createCell(2).setCellValue(product.getCategoryName()); // Category Name
+        newRow.createCell(3).setCellValue(product.getBrandName()); // Brand Name
         newRow.createCell(4).setCellValue(product.getStock()); // Stock
         newRow.createCell(5).setCellValue(product.getPrice()); // Price
-
+        newRow.createCell(6).setCellValue(product.getLocation()); // Price
+        
         connection.save();
     }
 
     @Override
-    public void update(int id, String newName, int newCategoryId, int newBrandId, int newStock, int newPrice) throws IOException {
+    public void update(int id, String newName, String newCategoryName, String newBrandName, int newStock, int newPrice, String newLocation) throws IOException {
         Sheet sheet = connection.getSheet("Product");
         boolean updated = false;
 
@@ -73,10 +70,11 @@ public class ProductRepositoryImpl implements ProductRepository {
             if (row.getRowNum() == 0) continue; // Skip header
             if ((int) row.getCell(0).getNumericCellValue() == id) {
                 row.getCell(1).setCellValue(newName);
-                row.getCell(2).setCellValue(newCategoryId);
-                row.getCell(3).setCellValue(newBrandId);
+                row.getCell(2).setCellValue(newCategoryName);
+                row.getCell(3).setCellValue(newBrandName);
                 row.getCell(4).setCellValue(newStock);
                 row.getCell(5).setCellValue(newPrice);
+                row.getCell(6).setCellValue(newLocation);
                 updated = true;
                 break;
             }
@@ -111,11 +109,12 @@ public class ProductRepositoryImpl implements ProductRepository {
             if (row.getRowNum() == 0) continue; // Skip header
             if ((int) row.getCell(0).getNumericCellValue() == id) {
                 String name = row.getCell(1).getStringCellValue();
-                int idCategory = (int) row.getCell(2).getNumericCellValue();
-                int idBrand = (int) row.getCell(3).getNumericCellValue();
+                String categoryName = row.getCell(2).getStringCellValue();
+                String brandName = row.getCell(3).getStringCellValue();
                 int stock = (int) row.getCell(4).getNumericCellValue();
                 int price = (int) row.getCell(5).getNumericCellValue();
-                return new Product(id, name, idCategory, idBrand, stock, price);
+                String location = row.getCell(6).getStringCellValue();
+                return new Product(id, name, categoryName, brandName, stock, price,location);
             }
         }
         throw new IllegalArgumentException("Product with ID " + id + " not found.");

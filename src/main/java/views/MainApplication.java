@@ -8,6 +8,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import controllers.BrandController;
 import controllers.CategoryController;
 import controllers.ClientController;
+import controllers.ProductController;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -16,9 +17,11 @@ import java.util.logging.Logger;
 import repositories.BrandRepositoryImpl;
 import repositories.CategoryRepositoryImpl;
 import repositories.ClientRepositoryImpl;
+import repositories.ProductRepositoryImpl;
 import services.BrandServiceImpl;
 import services.CategoryServiceImpl;
 import services.ClientServiceImpl;
+import services.ProductServiceImpl;
 import utilities.ExcelDatabaseConnection;
 
 public class MainApplication extends JFrame {
@@ -69,9 +72,13 @@ public class MainApplication extends JFrame {
         ClientRepositoryImpl clientRepository = new ClientRepositoryImpl(conection);
         ClientServiceImpl clientService =new ClientServiceImpl(clientRepository);
         ClientController clientController = new ClientController(clientService);
+        
+        ProductRepositoryImpl productRepository = new ProductRepositoryImpl(conection);
+        ProductServiceImpl productService =new ProductServiceImpl(productRepository);
+        ProductController productController = new ProductController(productService);
 
         // Listeners para abrir ventanas específicas
-        productsButton.addActionListener(e -> new ProductWindow().setVisible(true));
+        productsButton.addActionListener(e -> new ProductWindow(productController).setVisible(true));
         categoriesButton.addActionListener(e -> new CategoryWindow(categoryController).setVisible(true));
         brandsButton.addActionListener(e -> new BrandWindow(brandController).setVisible(true));
 
