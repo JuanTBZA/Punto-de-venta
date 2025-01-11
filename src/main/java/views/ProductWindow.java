@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ProductWindow extends JFrame {
@@ -82,36 +83,28 @@ public class ProductWindow extends JFrame {
     }
 
     private void openAddDialog() {
-        JPanel panel = new JPanel(new GridLayout(7, 2, 10, 10));
-        JTextField nameField = new JTextField();
-        JTextField categoryField = new JTextField();
-        JTextField brandField = new JTextField();
-        JTextField stockField = new JTextField();
-        JTextField priceField = new JTextField();
-        JTextField locationField = new JTextField();
+        // Configurar campos para EntityDialog
+        LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+        fields.put("name", "Nombre");
+        fields.put("category", "Categoría");
+        fields.put("brand", "Marca");
+        fields.put("stock", "Stock");
+        fields.put("price", "Precio");
+        fields.put("location", "Ubicación");
 
-        panel.add(new JLabel("Nombre:"));
-        panel.add(nameField);
-        panel.add(new JLabel("Categoría:"));
-        panel.add(categoryField);
-        panel.add(new JLabel("Marca:"));
-        panel.add(brandField);
-        panel.add(new JLabel("Stock:"));
-        panel.add(stockField);
-        panel.add(new JLabel("Precio:"));
-        panel.add(priceField);
-        panel.add(new JLabel("Ubicación:"));
-        panel.add(locationField);
+        // Crear el diálogo
+        EntityDialog dialog = new EntityDialog(this, "Agregar Producto", fields, null);
+        dialog.setVisible(true);
 
-        int option = JOptionPane.showConfirmDialog(this, panel, "Agregar Producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (option == JOptionPane.OK_OPTION) {
-            String name = nameField.getText().trim();
-            String category = categoryField.getText().trim();
-            String brand = brandField.getText().trim();
-            int stock = Integer.parseInt(stockField.getText().trim());
-            int price = Integer.parseInt(priceField.getText().trim());
-            String location = locationField.getText().trim();
+        // Verificar si el usuario confirmó la acción
+        if (dialog.isConfirmed()) {
+            LinkedHashMap<String, String> values = dialog.getFieldValues();
+            String name = values.get("name");
+            String category = values.get("category");
+            String brand = values.get("brand");
+            int stock = Integer.parseInt(values.get("stock"));
+            int price = Integer.parseInt(values.get("price"));
+            String location = values.get("location");
 
             if (!name.isEmpty() && !category.isEmpty() && !brand.isEmpty() && stock > 0 && price > 0 && !location.isEmpty()) {
                 try {
@@ -129,6 +122,7 @@ public class ProductWindow extends JFrame {
     private void openEditDialog(JTable productTable) {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
+            // Obtener datos de la fila seleccionada
             int id = (int) tableModel.getValueAt(selectedRow, 0);
             String currentName = (String) tableModel.getValueAt(selectedRow, 1);
             String currentCategory = (String) tableModel.getValueAt(selectedRow, 2);
@@ -137,36 +131,30 @@ public class ProductWindow extends JFrame {
             int currentPrice = (int) tableModel.getValueAt(selectedRow, 5);
             String currentLocation = (String) tableModel.getValueAt(selectedRow, 6);
 
-            JPanel panel = new JPanel(new GridLayout(7, 2, 10, 10));
-            JTextField nameField = new JTextField(currentName);
-            JTextField categoryField = new JTextField(currentCategory);
-            JTextField brandField = new JTextField(currentBrand);
-            JTextField stockField = new JTextField(String.valueOf(currentStock));
-            JTextField priceField = new JTextField(String.valueOf(currentPrice));
-            JTextField locationField = new JTextField(currentLocation);
+            // Configurar campos para EntityDialog
+            LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+            fields.put("name", "Nuevo Nombre");
+            fields.put("category", "Nueva Categoría");
+            fields.put("brand", "Nueva Marca");
+            fields.put("stock", "Nuevo Stock");
+            fields.put("price", "Nuevo Precio");
+            fields.put("location", "Nueva Ubicación");
 
-            panel.add(new JLabel("Nuevo Nombre:"));
-            panel.add(nameField);
-            panel.add(new JLabel("Nueva Categoría:"));
-            panel.add(categoryField);
-            panel.add(new JLabel("Nueva Marca:"));
-            panel.add(brandField);
-            panel.add(new JLabel("Nuevo Stock:"));
-            panel.add(stockField);
-            panel.add(new JLabel("Nuevo Precio:"));
-            panel.add(priceField);
-            panel.add(new JLabel("Nueva Ubicación:"));
-            panel.add(locationField);
+            Object[] initialValues = {currentName, currentCategory, currentBrand, currentStock, currentPrice, currentLocation};
 
-            int option = JOptionPane.showConfirmDialog(this, panel, "Editar Producto", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            // Crear el diálogo
+            EntityDialog dialog = new EntityDialog(this, "Editar Producto", fields, initialValues);
+            dialog.setVisible(true);
 
-            if (option == JOptionPane.OK_OPTION) {
-                String newName = nameField.getText().trim();
-                String newCategory = categoryField.getText().trim();
-                String newBrand = brandField.getText().trim();
-                int newStock = Integer.parseInt(stockField.getText().trim());
-                int newPrice = Integer.parseInt(priceField.getText().trim());
-                String newLocation = locationField.getText().trim();
+            // Verificar si el usuario confirmó la acción
+            if (dialog.isConfirmed()) {
+                LinkedHashMap<String, String> values = dialog.getFieldValues();
+                String newName = values.get("name");
+                String newCategory = values.get("category");
+                String newBrand = values.get("brand");
+                int newStock = Integer.parseInt(values.get("stock"));
+                int newPrice = Integer.parseInt(values.get("price"));
+                String newLocation = values.get("location");
 
                 if (!newName.isEmpty() && !newCategory.isEmpty() && !newBrand.isEmpty() && newStock > 0 && newPrice > 0 && !newLocation.isEmpty()) {
                     try {
