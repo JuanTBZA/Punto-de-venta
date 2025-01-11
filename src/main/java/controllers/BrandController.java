@@ -14,11 +14,14 @@ import models.Brand;
 import services.BrandServiceImpl;
 
 public class BrandController {
-    private final BrandServiceImpl service;
+    
+    private final  BrandServiceImpl service;
 
     public BrandController(BrandServiceImpl service) {
         this.service = service;
     }
+
+
 
     public List<Brand> listBrands() throws IOException {
         return service.getAllBrands();

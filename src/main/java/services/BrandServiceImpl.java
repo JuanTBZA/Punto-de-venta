@@ -9,11 +9,11 @@ import repositories.*;
 import java.io.IOException;
 import java.util.List;
 import models.Brand;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public class BrandServiceImpl implements BrandService{
-    private final BrandRepositoryImpl repository;
+    
+    private final BrandRepositoryImpl  repository;
 
     public BrandServiceImpl(BrandRepositoryImpl repository) {
         this.repository = repository;

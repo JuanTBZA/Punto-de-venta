@@ -50,9 +50,11 @@ public class MainApplication extends JFrame {
         mainPanel.add(salesButton);
 
         // Crear instancias necesarias para Brands
-        BrandRepositoryImpl brandRepository = new BrandRepositoryImpl(new ExcelDatabaseConnection());
-        BrandServiceImpl brandService = new BrandServiceImpl(brandRepository);
+        ExcelDatabaseConnection conection = new ExcelDatabaseConnection();
+        BrandRepositoryImpl brandRepository = new BrandRepositoryImpl(conection);
+        BrandServiceImpl brandService =new BrandServiceImpl(brandRepository);
         BrandController brandController = new BrandController(brandService);
+       
 
         // Listeners para abrir ventanas específicas
         productsButton.addActionListener(e -> new ProductWindow().setVisible(true));

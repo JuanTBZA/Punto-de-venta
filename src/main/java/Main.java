@@ -11,13 +11,14 @@ import utilities.ExcelDatabaseConnection;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ExcelDatabaseConnection connection = new ExcelDatabaseConnection();
-        BrandRepositoryImpl brandRepository = new BrandRepositoryImpl(connection);
-        BrandServiceImpl brandService = new BrandServiceImpl(brandRepository);
+     
+        ExcelDatabaseConnection conection = new ExcelDatabaseConnection();
+        BrandRepositoryImpl brandRepository = new BrandRepositoryImpl(conection);
+        BrandServiceImpl brandService =new BrandServiceImpl(brandRepository);
         BrandController brandController = new BrandController(brandService);
 
         // Agregar marcas
-        brandController.addBrand("Nike");
+        brandController.addBrand("funa");
       //  brandController.addBrand("Adidas");
 
         // Listar marcas
@@ -42,6 +43,6 @@ public class Main {
        // System.out.println("Lista actualizada de marcas:");
       //  brandController.listBrands();
 
-        connection.close();
+        conection.close();
     }
 }

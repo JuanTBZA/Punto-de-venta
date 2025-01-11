@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import repositories.BrandRepositoryImpl;
+import services.BrandService;
 import services.BrandServiceImpl;
 import utilities.ExcelDatabaseConnection;
 
@@ -142,11 +143,4 @@ public class BrandWindow extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
-    public static void main(String[] args) throws IOException {
-        // Aquí se debe inicializar el servicio y controlador
-        BrandServiceImpl service = new BrandServiceImpl(new BrandRepositoryImpl(new ExcelDatabaseConnection())); // Implementación ficticia
-        BrandController controller = new BrandController(service);
-
-        SwingUtilities.invokeLater(() -> new BrandWindow(controller).setVisible(true));
-    }
 }

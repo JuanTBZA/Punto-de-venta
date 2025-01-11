@@ -6,13 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import models.Brand;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.stereotype.Repository;
 import utilities.ExcelDatabaseConnection;
 
-@Repository
+
 public class BrandRepositoryImpl implements BrandRepository{
    
-    private final ExcelDatabaseConnection connection;
+    private final  ExcelDatabaseConnection connection;
 
     public BrandRepositoryImpl(ExcelDatabaseConnection connection) {
         this.connection = connection;
