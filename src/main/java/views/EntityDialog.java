@@ -1,4 +1,5 @@
 package views;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedHashMap;
@@ -36,21 +37,36 @@ public class EntityDialog extends JDialog {
         titleLabel.setForeground(new Color(33, 150, 243));
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // Panel para los campos
-        JPanel fieldPanel = new JPanel(new GridLayout(fields.size(), 2, 10, 10));
+        // Panel para los campos con GridBagLayout
+        JPanel fieldPanel = new JPanel(new GridBagLayout());
         fieldPanel.setOpaque(false);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Espaciado entre componentes
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0; // Etiquetas sin expansión horizontal
 
         int index = 0;
         for (Map.Entry<String, Object> entry : fields.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
 
+            // Etiqueta
             JLabel fieldLabel = new JLabel(value.toString() + ":");
             fieldLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-            fieldPanel.add(fieldLabel);
+            gbc.gridx = 0; // Primera columna (etiquetas)
+            gbc.weightx = 0; // No expandir
+            gbc.anchor = GridBagConstraints.WEST;
+            fieldPanel.add(fieldLabel, gbc);
 
-            // Determina si el campo es un JTextField o JComboBox
+            // Campo de entrada
             JComponent fieldComponent;
+            gbc.gridx = 1; // Segunda columna (campos de entrada)
+            gbc.weightx = 1; // Expandir horizontalmente
+            gbc.anchor = GridBagConstraints.CENTER;
+
             if (value instanceof String[]) { // Si es un JComboBox
                 String[] options = (String[]) value;
                 JComboBox<String> comboBox = new JComboBox<>(options);
@@ -60,13 +76,15 @@ public class EntityDialog extends JDialog {
                 fieldComponent = comboBox;
             } else { // Si es un JTextField
                 JTextField textField = new JTextField(initialValues != null ? initialValues[index].toString() : "");
+                textField.setPreferredSize(new Dimension(250, 30)); // Tamaño fijo
                 textField.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true));
                 textField.setFont(new Font("SansSerif", Font.PLAIN, 14));
                 fieldComponent = textField;
             }
 
-            fieldPanel.add(fieldComponent);
+            fieldPanel.add(fieldComponent, gbc);
             fieldMap.put(key, fieldComponent);
+            gbc.gridy++; // Siguiente fila
             index++;
         }
 

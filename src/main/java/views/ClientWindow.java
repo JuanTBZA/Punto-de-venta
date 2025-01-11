@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package views;
 
 import controllers.ClientController;
@@ -11,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ClientWindow extends JFrame {
@@ -85,24 +82,22 @@ public class ClientWindow extends JFrame {
     }
 
     private void openAddDialog() {
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-        JTextField nameField = new JTextField();
-        JTextField dniField = new JTextField();
-        JTextField nicknameField = new JTextField();
+        // Configurar campos para EntityDialog
+        LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+        fields.put("name", "Nombre");
+        fields.put("dni", "DNI");
+        fields.put("nickname", "Apodo");
 
-        panel.add(new JLabel("Nombre:"));
-        panel.add(nameField);
-        panel.add(new JLabel("DNI:"));
-        panel.add(dniField);
-        panel.add(new JLabel("Apodo:"));
-        panel.add(nicknameField);
+        // Crear el diálogo
+        EntityDialog dialog = new EntityDialog(this, "Agregar Cliente", fields, null);
+        dialog.setVisible(true);
 
-        int option = JOptionPane.showConfirmDialog(this, panel, "Agregar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (option == JOptionPane.OK_OPTION) {
-            String name = nameField.getText().trim();
-            String dni = dniField.getText().trim();
-            String nickname = nicknameField.getText().trim();
+        // Verificar si el usuario confirmó la acción
+        if (dialog.isConfirmed()) {
+            LinkedHashMap<String, String> values = dialog.getFieldValues();
+            String name = values.get("name");
+            String dni = values.get("dni");
+            String nickname = values.get("nickname");
 
             if (!name.isEmpty() && !dni.isEmpty() && !nickname.isEmpty()) {
                 try {
@@ -120,29 +115,29 @@ public class ClientWindow extends JFrame {
     private void openEditDialog(JTable clientTable) {
         int selectedRow = clientTable.getSelectedRow();
         if (selectedRow != -1) {
+            // Obtener datos de la fila seleccionada
             int id = (int) tableModel.getValueAt(selectedRow, 0);
             String currentName = (String) tableModel.getValueAt(selectedRow, 1);
             String currentDni = (String) tableModel.getValueAt(selectedRow, 2);
             String currentNickname = (String) tableModel.getValueAt(selectedRow, 3);
 
-            JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-            JTextField nameField = new JTextField(currentName);
-            JTextField dniField = new JTextField(currentDni);
-            JTextField nicknameField = new JTextField(currentNickname);
+            // Configurar campos para EntityDialog
+            LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+            fields.put("name", "Nuevo Nombre");
+            fields.put("dni", "Nuevo DNI");
+            fields.put("nickname", "Nuevo Apodo");
+            Object[] initialValues = {currentName, currentDni, currentNickname};
 
-            panel.add(new JLabel("Nuevo Nombre:"));
-            panel.add(nameField);
-            panel.add(new JLabel("Nuevo DNI:"));
-            panel.add(dniField);
-            panel.add(new JLabel("Nuevo Apodo:"));
-            panel.add(nicknameField);
+            // Crear el diálogo
+            EntityDialog dialog = new EntityDialog(this, "Editar Cliente", fields, initialValues);
+            dialog.setVisible(true);
 
-            int option = JOptionPane.showConfirmDialog(this, panel, "Editar Cliente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-            if (option == JOptionPane.OK_OPTION) {
-                String newName = nameField.getText().trim();
-                String newDni = dniField.getText().trim();
-                String newNickname = nicknameField.getText().trim();
+            // Verificar si el usuario confirmó la acción
+            if (dialog.isConfirmed()) {
+                LinkedHashMap<String, String> values = dialog.getFieldValues();
+                String newName = values.get("name");
+                String newDni = values.get("dni");
+                String newNickname = values.get("nickname");
 
                 if (!newName.isEmpty() && !newDni.isEmpty() && !newNickname.isEmpty()) {
                     try {
@@ -187,4 +182,3 @@ public class ClientWindow extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 }
-

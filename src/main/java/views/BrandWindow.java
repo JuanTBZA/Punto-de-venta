@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class BrandWindow extends JFrame {
@@ -81,13 +82,25 @@ public class BrandWindow extends JFrame {
     }
 
     private void openAddDialog() {
-        String name = JOptionPane.showInputDialog(this, "Nombre de la nueva marca:", "Agregar Marca", JOptionPane.PLAIN_MESSAGE);
-        if (name != null && !name.trim().isEmpty()) {
-            try {
-                controller.addBrand(name);
-                loadBrands();
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al agregar la marca: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+        fields.put("name", "Nombre de la Marca");
+
+        EntityDialog dialog = new EntityDialog(this, "Agregar Marca", fields, null);
+        dialog.setVisible(true);
+
+        if (dialog.isConfirmed()) {
+            LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
+            String name = fieldValues.get("name");
+
+            if (name != null && !name.trim().isEmpty()) {
+                try {
+                    controller.addBrand(name);
+                    loadBrands();
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "Error al agregar la marca: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "El nombre de la marca no puede estar vacío.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
@@ -98,13 +111,25 @@ public class BrandWindow extends JFrame {
             int id = (int) tableModel.getValueAt(selectedRow, 0);
             String currentName = (String) tableModel.getValueAt(selectedRow, 1);
 
-            String newName = JOptionPane.showInputDialog(this, "Nuevo nombre de la marca:", currentName);
-            if (newName != null && !newName.trim().isEmpty()) {
-                try {
-                    controller.updateBrand(id, newName);
-                    loadBrands();
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, "Error al actualizar la marca: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+            fields.put("name", "Nombre de la Marca");
+
+            EntityDialog dialog = new EntityDialog(this, "Editar Marca", fields, new Object[]{currentName});
+            dialog.setVisible(true);
+
+            if (dialog.isConfirmed()) {
+                LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
+                String newName = fieldValues.get("name");
+
+                if (newName != null && !newName.trim().isEmpty()) {
+                    try {
+                        controller.updateBrand(id, newName);
+                        loadBrands();
+                    } catch (IOException e) {
+                        JOptionPane.showMessageDialog(this, "Error al actualizar la marca: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "El nombre de la marca no puede estar vacío.", "Advertencia", JOptionPane.WARNING_MESSAGE);
                 }
             }
         } else {
@@ -138,5 +163,4 @@ public class BrandWindow extends JFrame {
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
-
 }

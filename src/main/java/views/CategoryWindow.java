@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package views;
 
 import controllers.CategoryController;
@@ -12,6 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CategoryWindow extends JFrame {
@@ -86,20 +82,20 @@ public class CategoryWindow extends JFrame {
     }
 
     private void openAddDialog() {
-        JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
-        JTextField nameField = new JTextField();
-        JTextField descriptionField = new JTextField();
+        // Configurar campos para EntityDialog
+        LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+        fields.put("name", "Nombre");
+        fields.put("description", "Descripción");
 
-        panel.add(new JLabel("Nombre:"));
-        panel.add(nameField);
-        panel.add(new JLabel("Descripción:"));
-        panel.add(descriptionField);
+        // Crear el diálogo
+        EntityDialog dialog = new EntityDialog(this, "Agregar Categoría", fields, null);
+        dialog.setVisible(true);
 
-        int option = JOptionPane.showConfirmDialog(this, panel, "Agregar Categoría", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (option == JOptionPane.OK_OPTION) {
-            String name = nameField.getText().trim();
-            String description = descriptionField.getText().trim();
+        // Verificar si el usuario confirmó la acción
+        if (dialog.isConfirmed()) {
+            LinkedHashMap<String, String> values = dialog.getFieldValues();
+            String name = values.get("name");
+            String description = values.get("description");
 
             if (!name.isEmpty() && !description.isEmpty()) {
                 try {
@@ -117,24 +113,26 @@ public class CategoryWindow extends JFrame {
     private void openEditDialog(JTable categoryTable) {
         int selectedRow = categoryTable.getSelectedRow();
         if (selectedRow != -1) {
+            // Obtener datos de la fila seleccionada
             int id = (int) tableModel.getValueAt(selectedRow, 0);
             String currentName = (String) tableModel.getValueAt(selectedRow, 1);
             String currentDescription = (String) tableModel.getValueAt(selectedRow, 2);
 
-            JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
-            JTextField nameField = new JTextField(currentName);
-            JTextField descriptionField = new JTextField(currentDescription);
+            // Configurar campos para EntityDialog
+            LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
+            fields.put("name", "Nuevo Nombre");
+            fields.put("description", "Nueva Descripción");
+            Object[] initialValues = {currentName, currentDescription};
 
-            panel.add(new JLabel("Nuevo Nombre:"));
-            panel.add(nameField);
-            panel.add(new JLabel("Nueva Descripción:"));
-            panel.add(descriptionField);
+            // Crear el diálogo
+            EntityDialog dialog = new EntityDialog(this, "Editar Categoría", fields, initialValues);
+            dialog.setVisible(true);
 
-            int option = JOptionPane.showConfirmDialog(this, panel, "Editar Categoría", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-            if (option == JOptionPane.OK_OPTION) {
-                String newName = nameField.getText().trim();
-                String newDescription = descriptionField.getText().trim();
+            // Verificar si el usuario confirmó la acción
+            if (dialog.isConfirmed()) {
+                LinkedHashMap<String, String> values = dialog.getFieldValues();
+                String newName = values.get("name");
+                String newDescription = values.get("description");
 
                 if (!newName.isEmpty() && !newDescription.isEmpty()) {
                     try {
@@ -179,4 +177,3 @@ public class CategoryWindow extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 }
-
