@@ -84,9 +84,9 @@ public class ClientWindow extends JFrame {
     private void openAddDialog() {
         // Configurar campos para EntityDialog
         LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-        fields.put("name", "Nombre");
-        fields.put("dni", "DNI");
-        fields.put("nickname", "Apodo");
+        fields.put("Nombre", "Nombre");
+        fields.put("DNI", "DNI");
+        fields.put("Apodo", "Apodo");
 
         // Crear el diálogo
         EntityDialog dialog = new EntityDialog(this, "Agregar Cliente", fields, null);
@@ -95,9 +95,9 @@ public class ClientWindow extends JFrame {
         // Verificar si el usuario confirmó la acción
         if (dialog.isConfirmed()) {
             LinkedHashMap<String, String> values = dialog.getFieldValues();
-            String name = values.get("name");
-            String dni = values.get("dni");
-            String nickname = values.get("nickname");
+            String name = values.get("Nombre");
+            String dni = values.get("DNI");
+            String nickname = values.get("Apodo");
 
             if (!name.isEmpty() && !dni.isEmpty() && !nickname.isEmpty()) {
                 try {
@@ -123,9 +123,9 @@ public class ClientWindow extends JFrame {
 
             // Configurar campos para EntityDialog
             LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-            fields.put("name", "Nuevo Nombre");
-            fields.put("dni", "Nuevo DNI");
-            fields.put("nickname", "Nuevo Apodo");
+            fields.put("Nombre", "Nuevo Nombre");
+            fields.put("DNI", "Nuevo DNI");
+            fields.put("Apodo", "Nuevo Apodo");
             Object[] initialValues = {currentName, currentDni, currentNickname};
 
             // Crear el diálogo
@@ -135,9 +135,9 @@ public class ClientWindow extends JFrame {
             // Verificar si el usuario confirmó la acción
             if (dialog.isConfirmed()) {
                 LinkedHashMap<String, String> values = dialog.getFieldValues();
-                String newName = values.get("name");
-                String newDni = values.get("dni");
-                String newNickname = values.get("nickname");
+                String newName = values.get("Nombre");
+                String newDni = values.get("DNI");
+                String newNickname = values.get("Apodo");
 
                 if (!newName.isEmpty() && !newDni.isEmpty() && !newNickname.isEmpty()) {
                     try {

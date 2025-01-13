@@ -83,14 +83,14 @@ public class BrandWindow extends JFrame {
 
     private void openAddDialog() {
         LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-        fields.put("name", "Nombre de la Marca");
+        fields.put("Nombre", "Nombre de la Marca");
 
         EntityDialog dialog = new EntityDialog(this, "Agregar Marca", fields, null);
         dialog.setVisible(true);
 
         if (dialog.isConfirmed()) {
             LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
-            String name = fieldValues.get("name");
+            String name = fieldValues.get("Nombre");
 
             if (name != null && !name.trim().isEmpty()) {
                 try {
@@ -112,14 +112,14 @@ public class BrandWindow extends JFrame {
             String currentName = (String) tableModel.getValueAt(selectedRow, 1);
 
             LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-            fields.put("name", "Nombre de la Marca");
+            fields.put("Nombre", "Nombre de la Marca");
 
             EntityDialog dialog = new EntityDialog(this, "Editar Marca", fields, new Object[]{currentName});
             dialog.setVisible(true);
 
             if (dialog.isConfirmed()) {
                 LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
-                String newName = fieldValues.get("name");
+                String newName = fieldValues.get("Nombre");
 
                 if (newName != null && !newName.trim().isEmpty()) {
                     try {

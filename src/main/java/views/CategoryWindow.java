@@ -84,8 +84,8 @@ public class CategoryWindow extends JFrame {
     private void openAddDialog() {
         // Configurar campos para EntityDialog
         LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-        fields.put("name", "Nombre");
-        fields.put("description", "Descripción");
+        fields.put("Nombre", "Nombre");
+        fields.put("Descripcion", "Descripción");
 
         // Crear el diálogo
         EntityDialog dialog = new EntityDialog(this, "Agregar Categoría", fields, null);
@@ -94,8 +94,8 @@ public class CategoryWindow extends JFrame {
         // Verificar si el usuario confirmó la acción
         if (dialog.isConfirmed()) {
             LinkedHashMap<String, String> values = dialog.getFieldValues();
-            String name = values.get("name");
-            String description = values.get("description");
+            String name = values.get("Nombre");
+            String description = values.get("Descripcion");
 
             if (!name.isEmpty() && !description.isEmpty()) {
                 try {
@@ -120,8 +120,8 @@ public class CategoryWindow extends JFrame {
 
             // Configurar campos para EntityDialog
             LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-            fields.put("name", "Nuevo Nombre");
-            fields.put("description", "Nueva Descripción");
+            fields.put("Nombre", "Nuevo Nombre");
+            fields.put("Descripcion", "Nueva Descripción");
             Object[] initialValues = {currentName, currentDescription};
 
             // Crear el diálogo
@@ -131,8 +131,8 @@ public class CategoryWindow extends JFrame {
             // Verificar si el usuario confirmó la acción
             if (dialog.isConfirmed()) {
                 LinkedHashMap<String, String> values = dialog.getFieldValues();
-                String newName = values.get("name");
-                String newDescription = values.get("description");
+                String newName = values.get("Nombre");
+                String newDescription = values.get("Descripcion");
 
                 if (!newName.isEmpty() && !newDescription.isEmpty()) {
                     try {
