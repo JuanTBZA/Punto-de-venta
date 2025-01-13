@@ -1,5 +1,7 @@
 package views;
 
+import controllers.BrandController;
+import controllers.CategoryController;
 import controllers.ProductController;
 import models.Product;
 
@@ -7,8 +9,17 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import models.Category;
+import repositories.BrandRepositoryImpl;
+import repositories.CategoryRepositoryImpl;
+import services.BrandServiceImpl;
+import services.CategoryServiceImpl;
+import utilities.ExcelDatabaseConnection;
 
 public class ProductWindow extends JFrame {
 
@@ -84,12 +95,33 @@ public class ProductWindow extends JFrame {
 
     private void openAddDialog() {
         LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-        String[] categories = {"Categoría 1", "Categoría 2", "Categoría 3"};
-        String[] brands = {"Marca A", "Marca B", "Marca C"};
+
+        List<String> categoriesArray = new ArrayList<>();  // Usamos ArrayList en lugar de un arreglo fijo
+
+        try {
+            ExcelDatabaseConnection connection = new ExcelDatabaseConnection();
+
+            CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl(connection);
+            CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+            CategoryController categoryController = new CategoryController(categoryService);
+
+            List<Category> categoryList = categoryController.listCategories();
+
+            // Recorrer las categorías y agregar el nombre de cada una a la lista categories
+            for (Category category : categoryList) {
+                categoriesArray.add(category.getName());  // Suponiendo que getName() devuelve el nombre de la categoría
+            }
+
+            // Si necesitas convertir la lista a un arreglo de String, puedes hacerlo así:
+        } catch (IOException ex) {
+            Logger.getLogger(ProductWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String[] categories = categoriesArray.toArray(new String[0]);
 
         fields.put("Nombre", "Nombre");
         fields.put("Categoria", categories);
-        fields.put("Marca", brands);
+        fields.put("Marca", "Marca");
         fields.put("Stock", "Stock");
         fields.put("Precio", "Precio");
         fields.put("Ubicacion", "Ubicación");
@@ -126,13 +158,33 @@ public class ProductWindow extends JFrame {
             int currentPrice = (int) tableModel.getValueAt(selectedRow, 5);
             String currentLocation = (String) tableModel.getValueAt(selectedRow, 6);
 
-            String[] categories = {"Categoría 1", "Categoría 2", "Categoría 3"};
-            String[] brands = {"Marca A", "Marca B", "Marca C"};
+            List<String> categoriesArray = new ArrayList<>();  // Usamos ArrayList en lugar de un arreglo fijo
+
+            try {
+                ExcelDatabaseConnection connection = new ExcelDatabaseConnection();
+
+                CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl(connection);
+                CategoryServiceImpl categoryService = new CategoryServiceImpl(categoryRepository);
+                CategoryController categoryController = new CategoryController(categoryService);
+
+                List<Category> categoryList = categoryController.listCategories();
+
+                // Recorrer las categorías y agregar el nombre de cada una a la lista categories
+                for (Category category : categoryList) {
+                    categoriesArray.add(category.getName());  // Suponiendo que getName() devuelve el nombre de la categoría
+                }
+
+                // Si necesitas convertir la lista a un arreglo de String, puedes hacerlo así:
+            } catch (IOException ex) {
+                Logger.getLogger(ProductWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            String[] categories = categoriesArray.toArray(new String[0]);
 
             LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
             fields.put("Nombre", "Nombre");
             fields.put("Categoria", categories);
-            fields.put("Marca", brands);
+            fields.put("Marca", "Marca");
             fields.put("Stock", "Stock");
             fields.put("Precio", "Precio");
             fields.put("Ubicacion", "Ubicación");

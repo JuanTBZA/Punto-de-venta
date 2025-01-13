@@ -3,7 +3,6 @@ repositories\BrandRepositoryImpl.class
 repositories\CategoryRepositoryImpl.class
 repositories\ClientRepository.class
 services\ProductServiceImpl.class
-Main.class
 views\SalesWindow.class
 controllers\CategoryController.class
 services\BrandService.class
