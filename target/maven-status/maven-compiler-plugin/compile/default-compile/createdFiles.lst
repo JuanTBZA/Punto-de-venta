@@ -30,5 +30,4 @@ utilities\ExcelDatabaseConnection.class
 services\CategoryServiceImpl.class
 views\ProductWindow.class
 models\Brand.class
-views\EntityDialog$1.class
 views\MainApplication.class

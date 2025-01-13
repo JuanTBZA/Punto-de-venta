@@ -75,7 +75,7 @@ public class ProductWindow extends JFrame {
             List<Product> products = controller.listProducts();
             for (Product product : products) {
                 tableModel.addRow(new Object[]{product.getId(), product.getName(), product.getCategoryName(),
-                        product.getBrandName(), product.getStock(), product.getPrice(), product.getLocation()});
+                    product.getBrandName(), product.getStock(), product.getPrice(), product.getLocation()});
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error al cargar los productos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -83,38 +83,34 @@ public class ProductWindow extends JFrame {
     }
 
     private void openAddDialog() {
-        // Configurar campos para EntityDialog
         LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-        fields.put("name", "Nombre");
-        fields.put("category", "Categoría");
-        fields.put("brand", "Marca");
-        fields.put("stock", "Stock");
-        fields.put("price", "Precio");
-        fields.put("location", "Ubicación");
+        String[] categories = {"Categoría 1", "Categoría 2", "Categoría 3"};
+        String[] brands = {"Marca A", "Marca B", "Marca C"};
 
-        // Crear el diálogo
+        fields.put("Nombre", "Nombre");
+        fields.put("Categoria", categories);
+        fields.put("Marca", brands);
+        fields.put("Stock", "Stock");
+        fields.put("Precio", "Precio");
+        fields.put("Ubicacion", "Ubicación");
+
         EntityDialog dialog = new EntityDialog(this, "Agregar Producto", fields, null);
         dialog.setVisible(true);
 
-        // Verificar si el usuario confirmó la acción
         if (dialog.isConfirmed()) {
-            LinkedHashMap<String, String> values = dialog.getFieldValues();
-            String name = values.get("name");
-            String category = values.get("category");
-            String brand = values.get("brand");
-            int stock = Integer.parseInt(values.get("stock"));
-            int price = Integer.parseInt(values.get("price"));
-            String location = values.get("location");
+            try {
+                LinkedHashMap<String, String> values = dialog.getFieldValues();
+                String name = values.get("Nombre");
+                String category = values.get("Categoria");
+                String brand = values.get("Marca");
+                int stock = Integer.parseInt(values.get("Stock"));
+                int price = Integer.parseInt(values.get("Precio"));
+                String location = values.get("Ubicacion");
 
-            if (!name.isEmpty() && !category.isEmpty() && !brand.isEmpty() && stock > 0 && price > 0 && !location.isEmpty()) {
-                try {
-                    controller.addProduct(name, category, brand, stock, price, location);
-                    loadProducts();
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, "Error al agregar el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Por favor ingresa todos los campos correctamente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                controller.addProduct(name, category, brand, stock, price, location);
+                loadProducts();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error al agregar el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -122,7 +118,6 @@ public class ProductWindow extends JFrame {
     private void openEditDialog(JTable productTable) {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
-            // Obtener datos de la fila seleccionada
             int id = (int) tableModel.getValueAt(selectedRow, 0);
             String currentName = (String) tableModel.getValueAt(selectedRow, 1);
             String currentCategory = (String) tableModel.getValueAt(selectedRow, 2);
@@ -131,40 +126,35 @@ public class ProductWindow extends JFrame {
             int currentPrice = (int) tableModel.getValueAt(selectedRow, 5);
             String currentLocation = (String) tableModel.getValueAt(selectedRow, 6);
 
-            // Configurar campos para EntityDialog
+            String[] categories = {"Categoría 1", "Categoría 2", "Categoría 3"};
+            String[] brands = {"Marca A", "Marca B", "Marca C"};
+
             LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-            fields.put("name", "Nuevo Nombre");
-            fields.put("category", "Nueva Categoría");
-            fields.put("brand", "Nueva Marca");
-            fields.put("stock", "Nuevo Stock");
-            fields.put("price", "Nuevo Precio");
-            fields.put("location", "Nueva Ubicación");
+            fields.put("Nombre", "Nombre");
+            fields.put("Categoria", categories);
+            fields.put("Marca", brands);
+            fields.put("Stock", "Stock");
+            fields.put("Precio", "Precio");
+            fields.put("Ubicacion", "Ubicación");
 
             Object[] initialValues = {currentName, currentCategory, currentBrand, currentStock, currentPrice, currentLocation};
-
-            // Crear el diálogo
             EntityDialog dialog = new EntityDialog(this, "Editar Producto", fields, initialValues);
             dialog.setVisible(true);
 
-            // Verificar si el usuario confirmó la acción
             if (dialog.isConfirmed()) {
-                LinkedHashMap<String, String> values = dialog.getFieldValues();
-                String newName = values.get("name");
-                String newCategory = values.get("category");
-                String newBrand = values.get("brand");
-                int newStock = Integer.parseInt(values.get("stock"));
-                int newPrice = Integer.parseInt(values.get("price"));
-                String newLocation = values.get("location");
+                try {
+                    LinkedHashMap<String, String> values = dialog.getFieldValues();
+                    String newName = values.get("Nombre");
+                    String newCategory = values.get("Categoria");
+                    String newBrand = values.get("Marca");
+                    int newStock = Integer.parseInt(values.get("Stock"));
+                    int newPrice = Integer.parseInt(values.get("Precio"));
+                    String newLocation = values.get("Ubicacion");
 
-                if (!newName.isEmpty() && !newCategory.isEmpty() && !newBrand.isEmpty() && newStock > 0 && newPrice > 0 && !newLocation.isEmpty()) {
-                    try {
-                        controller.updateProduct(id, newName, newCategory, newBrand, newStock, newPrice, newLocation);
-                        loadProducts();
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(this, "Error al actualizar el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(this, "Por favor ingresa todos los campos correctamente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    controller.updateProduct(id, newName, newCategory, newBrand, newStock, newPrice, newLocation);
+                    loadProducts();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Error al actualizar el producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
@@ -176,7 +166,6 @@ public class ProductWindow extends JFrame {
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
             int id = (int) tableModel.getValueAt(selectedRow, 0);
-
             int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar este producto?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
                 try {
