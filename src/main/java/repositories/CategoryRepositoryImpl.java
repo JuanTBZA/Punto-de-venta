@@ -26,7 +26,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<Category> findAll() throws IOException {
-        Sheet sheet = connection.getSheet("Category");
+        Sheet sheet = connection.getSheet("Categoria");
         List<Category> categories = new ArrayList<>();
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
@@ -40,7 +40,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public void add(Category category) throws IOException {
-        Sheet sheet = connection.getSheet("Category");
+        Sheet sheet = connection.getSheet("Categoria");
         int newId = 1; // Default for the first record
 
         // Find the last ID in column 0 (ID)
@@ -63,7 +63,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public void update(int id, String newName, String newDescription) throws IOException {
-        Sheet sheet = connection.getSheet("Category");
+        Sheet sheet = connection.getSheet("Categoria");
         boolean updated = false;
 
         for (Row row : sheet) {
@@ -84,7 +84,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public void delete(int id) throws IOException {
-        Sheet sheet = connection.getSheet("Category");
+        Sheet sheet = connection.getSheet("Categoria");
         Iterator<Row> rowIterator = sheet.iterator();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
@@ -100,7 +100,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Category findById(int id) throws IOException {
-        Sheet sheet = connection.getSheet("Category");
+        Sheet sheet = connection.getSheet("Categoria");
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
             if ((int) row.getCell(0).getNumericCellValue() == id) {

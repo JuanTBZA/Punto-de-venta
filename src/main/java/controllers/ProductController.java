@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import models.Brand;
 import models.Category;
 import models.Product;
 import services.ProductServiceImpl;

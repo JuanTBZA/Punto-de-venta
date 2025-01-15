@@ -1,6 +1,6 @@
 package views;
 
-import controllers.BrandController;
+
 import controllers.CategoryController;
 import controllers.ProductController;
 import models.Product;
@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.Category;
-import repositories.BrandRepositoryImpl;
+
 import repositories.CategoryRepositoryImpl;
-import services.BrandServiceImpl;
+
 import services.CategoryServiceImpl;
 import utilities.ExcelDatabaseConnection;
 

@@ -5,7 +5,7 @@
 package views;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import controllers.BrandController;
+
 import controllers.CategoryController;
 import controllers.ClientController;
 import controllers.ProductController;
@@ -14,11 +14,11 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import repositories.BrandRepositoryImpl;
+
 import repositories.CategoryRepositoryImpl;
 import repositories.ClientRepositoryImpl;
 import repositories.ProductRepositoryImpl;
-import services.BrandServiceImpl;
+
 import services.CategoryServiceImpl;
 import services.ClientServiceImpl;
 import services.ProductServiceImpl;
@@ -47,23 +47,20 @@ public class MainApplication extends JFrame {
         // Botones para cada sección
         JButton productsButton = createStyledButton("Productos");
         JButton categoriesButton = createStyledButton("Categorías");
-        JButton brandsButton = createStyledButton("Marcas");
+      
         JButton clientsButton = createStyledButton("Clientes");
         JButton salesButton = createStyledButton("Ventas");
 
         // Agregar botones al panel
         mainPanel.add(productsButton);
         mainPanel.add(categoriesButton);
-        mainPanel.add(brandsButton);
+
         mainPanel.add(clientsButton);
         mainPanel.add(salesButton);
 
         // Crear instancias necesarias para Brands
         ExcelDatabaseConnection conection = new ExcelDatabaseConnection();
         
-        BrandRepositoryImpl brandRepository = new BrandRepositoryImpl(conection);
-        BrandServiceImpl brandService =new BrandServiceImpl(brandRepository);
-        BrandController brandController = new BrandController(brandService);
         
         CategoryRepositoryImpl categoryRepository = new CategoryRepositoryImpl(conection);
         CategoryServiceImpl categoryService =new CategoryServiceImpl(categoryRepository);
@@ -80,7 +77,7 @@ public class MainApplication extends JFrame {
         // Listeners para abrir ventanas específicas
         productsButton.addActionListener(e -> new ProductWindow(productController).setVisible(true));
         categoriesButton.addActionListener(e -> new CategoryWindow(categoryController).setVisible(true));
-        brandsButton.addActionListener(e -> new BrandWindow(brandController).setVisible(true));
+        
 
         clientsButton.addActionListener(e -> new ClientWindow(clientController).setVisible(true));
         salesButton.addActionListener(e -> new SalesWindow().setVisible(true));

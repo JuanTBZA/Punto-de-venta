@@ -18,7 +18,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> findAll() throws IOException {
-        Sheet sheet = connection.getSheet("Product");
+        Sheet sheet = connection.getSheet("Producto");
         List<Product> products = new ArrayList<>();
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
@@ -36,7 +36,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void add(Product product) throws IOException {
-        Sheet sheet = connection.getSheet("Product");
+        Sheet sheet = connection.getSheet("Producto");
         int newId = 1; // Default for the first record
 
         // Find the last ID in column 0 (ID)
@@ -63,7 +63,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void update(int id, String newName, String newCategoryName, String newBrandName, int newStock, int newPrice, String newLocation) throws IOException {
-        Sheet sheet = connection.getSheet("Product");
+        Sheet sheet = connection.getSheet("Producto");
         boolean updated = false;
 
         for (Row row : sheet) {
@@ -88,7 +88,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void delete(int id) throws IOException {
-        Sheet sheet = connection.getSheet("Product");
+        Sheet sheet = connection.getSheet("Producto");
         Iterator<Row> rowIterator = sheet.iterator();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
@@ -104,7 +104,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(int id) throws IOException {
-        Sheet sheet = connection.getSheet("Product");
+        Sheet sheet = connection.getSheet("Producto");
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
             if ((int) row.getCell(0).getNumericCellValue() == id) {

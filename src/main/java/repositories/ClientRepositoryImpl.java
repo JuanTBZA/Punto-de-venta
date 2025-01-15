@@ -23,7 +23,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public List<Client> findAll() throws IOException {
-        Sheet sheet = connection.getSheet("Client");
+        Sheet sheet = connection.getSheet("Cliente");
         List<Client> clients = new ArrayList<>();
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
@@ -38,7 +38,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public void add(Client client) throws IOException {
-        Sheet sheet = connection.getSheet("Client");
+        Sheet sheet = connection.getSheet("Cliente");
         int newId = 1; // Default for the first record
 
         // Find the last ID in column 0 (ID)
@@ -52,6 +52,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
         // Create a new row at the end of the sheet
         Row newRow = sheet.createRow(sheet.getLastRowNum() + 1);
+        
         newRow.createCell(0).setCellValue(newId); // Generated ID
         newRow.createCell(1).setCellValue(client.getName()); // Client Name
         newRow.createCell(2).setCellValue(client.getDni()); // Client DNI
@@ -62,7 +63,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public void update(int id, String newName, String newDni, String newNickname) throws IOException {
-        Sheet sheet = connection.getSheet("Client");
+        Sheet sheet = connection.getSheet("Cliente");
         boolean updated = false;
 
         for (Row row : sheet) {
@@ -84,7 +85,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public void delete(int id) throws IOException {
-        Sheet sheet = connection.getSheet("Client");
+        Sheet sheet = connection.getSheet("Cliente");
         Iterator<Row> rowIterator = sheet.iterator();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
@@ -100,7 +101,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Client findById(int id) throws IOException {
-        Sheet sheet = connection.getSheet("Client");
+        Sheet sheet = connection.getSheet("Cliente");
         for (Row row : sheet) {
             if (row.getRowNum() == 0) continue; // Skip header
             if ((int) row.getCell(0).getNumericCellValue() == id) {

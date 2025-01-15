@@ -45,17 +45,18 @@ public class ExcelDatabaseConnection {
         // Establecer encabezados predeterminados dependiendo del nombre de la hoja
         String[] headers;
         switch (sheet.getSheetName()) {
-            case "Brand":
-                headers = new String[]{"ID", "Name"};
+          
+            case "Cliente":
+                headers = new String[]{"ID", "Nombre", "DNI", "Apodo"};
                 break;
-            case "Client":
-                headers = new String[]{"ID", "Name", "DNI", "Nickname"};
+            case "Categoria":
+                headers = new String[]{"ID", "Nombre", "Descripcion"};
                 break;
-            case "Category":
-                headers = new String[]{"ID", "Name", "Description"};
+            case "Producto":
+                headers = new String[]{"ID", "Nombre", "Categoria", "Marca", "Stock", "Precio", "Ubicacion"};
                 break;
-            case "Product":
-                headers = new String[]{"ID", "Name", "Category ID", "Brand ID", "Stock", "Price", "Location"};
+            case "Venta":
+                headers = new String[]{"ID", "Fecha", "Hora", "Cliente", "Cantidad", "Producto", "Precio", "Subtotal"};
                 break;
             default:
                 return; // Si no se encuentra la hoja, no hace nada
@@ -70,10 +71,11 @@ public class ExcelDatabaseConnection {
 
     private void createDefaultSheetsWithHeaders() {
         // Crea las hojas con los encabezados predeterminados
-        getSheet("Brand");
-        getSheet("Client");
-        getSheet("Category");
-        getSheet("Product");
+       
+        getSheet("Cliente");
+        getSheet("Categoria");
+        getSheet("Producto");
+        getSheet("Venta");
     }
 
     public void save() throws IOException {
