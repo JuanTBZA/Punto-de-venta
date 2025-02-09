@@ -12,7 +12,7 @@ public interface ProductService {
 
     public List<Product> getAllProducts() throws IOException;
     public void addProduct(Product product) throws IOException ;
-    public void updateProduct(int id, String newName, String newCategoryName, String newBrandName, int newStock, int newPrice, String newLocation) throws IOException ;
+    public void updateProduct(int id, String newName, String newCategoryName, String newBrandName, int newStock, Double newPrice, String newLocation) throws IOException ;
     public void deleteProduct(int id) throws IOException ;
     public Product findById(int id) throws IOException ;
 

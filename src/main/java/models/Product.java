@@ -14,10 +14,10 @@ public class Product {
     private String categoryName;
     private String brandName;
     private int stock;
-    private int price;
+    private Double price;
     private String location;
 
-    public Product(int id, String name, String categoryName, String brandName, int stock, int price, String location) {
+    public Product(int id, String name, String categoryName, String brandName, int stock, Double price, String location) {
         this.id = id;
         this.name = name;
         this.categoryName = categoryName;
@@ -67,11 +67,11 @@ public class Product {
         this.stock = stock;
     }
 
-    public int getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -82,6 +82,7 @@ public class Product {
     public void setLocation(String location) {
         this.location = location;
     }
+
 
   
     

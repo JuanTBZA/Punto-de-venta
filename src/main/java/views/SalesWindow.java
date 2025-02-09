@@ -1,136 +1,194 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package views;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.LinkedHashMap;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class SalesWindow extends JFrame {
 
-    private final DefaultTableModel tableModel;
+    private final DefaultTableModel productTableModel;
+    private final DefaultTableModel cartTableModel;
+    private final JLabel totalLabel;
+    private final JTextField searchField;
+    private final JTextField selectedProductField;
+    private final JTextField quantityField;
+    private final JTextField clientField;
+    private final JTextField dateField;
+    private final JTextField timeField;
 
     public SalesWindow() {
-        setTitle("Gestión de Ventas");
-        setSize(600, 400);
-        setLocationRelativeTo(null);
+        setTitle("Ventas");
+        setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // Panel principal
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(mainPanel, BorderLayout.CENTER);
 
-        // Título
-        JLabel titleLabel = new JLabel("Ventas", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
-        titleLabel.setForeground(new Color(33, 150, 243));
-        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        // Top section: Product table and search
+        JPanel topPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Tabla
-        String[] columnNames = {"ID Venta", "Producto", "Cliente", "Cantidad", "Fecha", "Total"};
-        tableModel = new DefaultTableModel(columnNames, 0);
-        JTable salesTable = new JTable(tableModel);
-        salesTable.setRowHeight(25);
-        salesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane tableScrollPane = new JScrollPane(salesTable);
-        mainPanel.add(tableScrollPane, BorderLayout.CENTER);
+        // Search field and button
+        JPanel searchPanel = new JPanel(new BorderLayout(10, 10));
+        searchField = new JTextField();
+        searchField.setToolTipText("Buscar producto por nombre");
+        searchPanel.add(searchField, BorderLayout.CENTER);
 
-        // Botones
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JButton searchButton = new JButton("Buscar");
+        styleButton(searchButton, new Color(33, 150, 243));
+        searchPanel.add(searchButton, BorderLayout.EAST);
+        topPanel.add(searchPanel, BorderLayout.NORTH);
+
+        // Product table
+        String[] productColumns = {"ID", "Nombre", "Precio"};
+        productTableModel = new DefaultTableModel(productColumns, 0);
+        JTable productTable = new JTable(productTableModel);
+        productTable.setRowHeight(30);
+        productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane productScrollPane = new JScrollPane(productTable);
+        topPanel.add(productScrollPane, BorderLayout.CENTER);
+
+        // Right section: Product details and add to cart
+        JPanel rightPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+        topPanel.add(rightPanel, BorderLayout.EAST);
+
+        JLabel selectedProductLabel = new JLabel("Producto seleccionado: ");
+        rightPanel.add(selectedProductLabel);
+
+        selectedProductField = new JTextField();
+        selectedProductField.setEnabled(false);
+        selectedProductField.setToolTipText("Nombre del producto seleccionado");
+        rightPanel.add(selectedProductField);
+
+        quantityField = new JTextField();
+        quantityField.setToolTipText("Cantidad");
+        rightPanel.add(quantityField);
+
         JButton addButton = new JButton("Agregar");
-        JButton editButton = new JButton("Editar");
-        JButton deleteButton = new JButton("Eliminar");
-
         styleButton(addButton, new Color(76, 175, 80));
-        styleButton(editButton, new Color(33, 150, 243));
-        styleButton(deleteButton, new Color(244, 67, 54));
+        rightPanel.add(addButton);
 
-        buttonPanel.add(addButton);
-        buttonPanel.add(editButton);
-        buttonPanel.add(deleteButton);
+        // Bottom section: Cart table and sale details
+        JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.add(bottomPanel, BorderLayout.CENTER);
 
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        // Cart table
+        String[] cartColumns = {"Nombre", "Cantidad", "Precio Unitario", "Subtotal"};
+        cartTableModel = new DefaultTableModel(cartColumns, 0);
+        JTable cartTable = new JTable(cartTableModel);
+        cartTable.setRowHeight(30);
+        JScrollPane cartScrollPane = new JScrollPane(cartTable);
+        bottomPanel.add(cartScrollPane, BorderLayout.CENTER);
 
-        // Listeners
-        addButton.addActionListener(e -> openDialog("Agregar Venta", null));
-        editButton.addActionListener(e -> {
-            int selectedRow = salesTable.getSelectedRow();
-            if (selectedRow != -1) {
-                String[] initialValues = {
-                        tableModel.getValueAt(selectedRow, 0).toString(),
-                        tableModel.getValueAt(selectedRow, 1).toString(),
-                        tableModel.getValueAt(selectedRow, 2).toString(),
-                        tableModel.getValueAt(selectedRow, 3).toString(),
-                        tableModel.getValueAt(selectedRow, 4).toString(),
-                        tableModel.getValueAt(selectedRow, 5).toString()
-                };
-                openDialog("Editar Venta", initialValues);
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona una venta para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-            }
-        });
-        deleteButton.addActionListener(e -> {
-            int selectedRow = salesTable.getSelectedRow();
-            if (selectedRow != -1) {
-                int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar esta venta?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-                if (confirmation == JOptionPane.YES_OPTION) {
-                    tableModel.removeRow(selectedRow);
+        // Sale details
+        JPanel saleDetailsPanel = new JPanel(new GridLayout(2, 1, 10, 10));
+        bottomPanel.add(saleDetailsPanel, BorderLayout.SOUTH);
+
+        JPanel clientPanel = new JPanel(new GridLayout(1, 3, 10, 10));
+        clientField = new JTextField();
+        clientField.setToolTipText("Cliente");
+        clientPanel.add(clientField);
+
+        dateField = new JTextField(LocalDate.now().toString());
+        dateField.setToolTipText("Fecha");
+        clientPanel.add(dateField);
+
+        timeField = new JTextField(LocalTime.now().toString());
+        timeField.setToolTipText("Hora");
+        clientPanel.add(timeField);
+
+        saleDetailsPanel.add(clientPanel);
+
+        JPanel totalPanel = new JPanel(new BorderLayout(10, 10));
+        totalLabel = new JLabel("TOTAL: $0.00", SwingConstants.RIGHT);
+        totalLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        totalPanel.add(totalLabel, BorderLayout.CENTER);
+
+        JButton sellButton = new JButton("Vender");
+        styleButton(sellButton, new Color(244, 67, 54));
+        totalPanel.add(sellButton, BorderLayout.EAST);
+
+        saleDetailsPanel.add(totalPanel);
+
+        // Actions
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchQuery = searchField.getText().trim();
+                if (!searchQuery.isEmpty()) {
+                    JOptionPane.showMessageDialog(SalesWindow.this, "Buscar producto: " + searchQuery);
+                } else {
+                    JOptionPane.showMessageDialog(SalesWindow.this, "Introduce un nombre para buscar.");
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Selecciona una venta para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
         });
-    }
 
-    private void openDialog(String title, String[] initialValues) {
-        LinkedHashMap<String, Object> fields = new LinkedHashMap<>();
-        fields.put("id", "ID Venta");
-        fields.put("product", "Producto");
-        fields.put("client", "Cliente");
-        fields.put("quantity", "Cantidad");
-        fields.put("date", "Fecha");
-        fields.put("total", "Total");
-
-        EntityDialog dialog = new EntityDialog(this, title, fields, initialValues);
-        dialog.setVisible(true);
-
-        if (dialog.isConfirmed()) {
-            LinkedHashMap<String, String> fieldValues = dialog.getFieldValues();
-            if (initialValues == null) { // Agregar
-                tableModel.addRow(new Object[]{
-                        fieldValues.get("id"),
-                        fieldValues.get("product"),
-                        fieldValues.get("client"),
-                        fieldValues.get("quantity"),
-                        fieldValues.get("date"),
-                        fieldValues.get("total")
-                });
-            } else { // Editar
-                int selectedRow = getSelectedRowById(fieldValues.get("id"));
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = productTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    tableModel.setValueAt(fieldValues.get("id"), selectedRow, 0);
-                    tableModel.setValueAt(fieldValues.get("product"), selectedRow, 1);
-                    tableModel.setValueAt(fieldValues.get("client"), selectedRow, 2);
-                    tableModel.setValueAt(fieldValues.get("quantity"), selectedRow, 3);
-                    tableModel.setValueAt(fieldValues.get("date"), selectedRow, 4);
-                    tableModel.setValueAt(fieldValues.get("total"), selectedRow, 5);
+                    String name = productTableModel.getValueAt(selectedRow, 1).toString();
+                    double price = Double.parseDouble(productTableModel.getValueAt(selectedRow, 2).toString());
+                    int quantity = Integer.parseInt(quantityField.getText());
+                    double subtotal = quantity * price;
+
+                    selectedProductField.setText(name);
+                    cartTableModel.addRow(new Object[]{name, quantity, price, subtotal});
+                    updateTotal();
+                } else {
+                    JOptionPane.showMessageDialog(SalesWindow.this, "Selecciona un producto.");
                 }
             }
-        }
+        });
+
+        sellButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cartTableModel.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(SalesWindow.this, "No hay productos en el carrito.");
+                    return;
+                }
+
+                String client = clientField.getText();
+                String date = dateField.getText();
+                String time = timeField.getText();
+
+                if (client.isEmpty()) {
+                    JOptionPane.showMessageDialog(SalesWindow.this, "Introduce el nombre del cliente.");
+                    return;
+                }
+
+                JOptionPane.showMessageDialog(SalesWindow.this, "Venta realizada exitosamente.");
+                cartTableModel.setRowCount(0);
+                clientField.setText("");
+                selectedProductField.setText("");
+                updateTotal();
+            }
+        });
+
+        // Dummy data for the product table
+        loadDummyProducts();
     }
 
-    private int getSelectedRowById(String id) {
-        for (int i = 0; i < tableModel.getRowCount(); i++) {
-            if (tableModel.getValueAt(i, 0).toString().equals(id)) {
-                return i;
-            }
+    private void updateTotal() {
+        double total = 0;
+        for (int i = 0; i < cartTableModel.getRowCount(); i++) {
+            total += (double) cartTableModel.getValueAt(i, 3);
         }
-        return -1;
+        totalLabel.setText("TOTAL: $" + String.format("%.2f", total));
+    }
+
+    private void loadDummyProducts() {
+        productTableModel.addRow(new Object[]{1, "Producto A", 10.00});
+        productTableModel.addRow(new Object[]{2, "Producto B", 15.50});
+        productTableModel.addRow(new Object[]{3, "Producto C", 8.75});
     }
 
     private void styleButton(JButton button, Color backgroundColor) {
@@ -141,5 +199,10 @@ public class SalesWindow extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
-
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            SalesWindow window = new SalesWindow();
+            window.setVisible(true);
+        });
+    }
 }

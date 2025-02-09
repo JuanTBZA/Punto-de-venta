@@ -34,4 +34,5 @@
         <maven.compiler.target>22</maven.compiler.target>
         <exec.mainClass>com.mycompany.corporacioneseli.CorporacionesEli</exec.mainClass>
     </properties>
+    <name>GestorInventario</name>
 </project>

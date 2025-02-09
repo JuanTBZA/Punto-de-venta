@@ -17,7 +17,7 @@ public interface ProductRepository {
 
     public void add(Product product) throws IOException;
 
-    public void update(int id, String newName, String newCategoryName, String newBrandName, int newStock, int newPrice, String newlocation) throws IOException;
+    public void update(int id, String newName, String newCategoryName, String newBrandName, int newStock, Double newPrice, String newlocation) throws IOException;
 
     public void delete(int id) throws IOException;
 

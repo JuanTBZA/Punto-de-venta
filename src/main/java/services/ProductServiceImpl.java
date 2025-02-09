@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(int id, String newName, String newCategoryName, String newBrandName, int newStock, int newPrice,String newLocation) throws IOException {
+    public void updateProduct(int id, String newName, String newCategoryName, String newBrandName, int newStock, Double newPrice,String newLocation) throws IOException {
         repository.update(id, newName, newCategoryName, newBrandName, newStock, newPrice,newLocation);
     }
 

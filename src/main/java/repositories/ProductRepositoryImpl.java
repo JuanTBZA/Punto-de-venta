@@ -27,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepository {
             String categoryName = row.getCell(2).getStringCellValue();
             String brandName = row.getCell(3).getStringCellValue();
             int stock = (int) row.getCell(4).getNumericCellValue();
-            int price = (int) row.getCell(5).getNumericCellValue();
+            Double price = (Double) row.getCell(5).getNumericCellValue();
             String location = row.getCell(6).getStringCellValue();
             products.add(new Product(id, name, categoryName, brandName, stock, price,location));
         }
@@ -62,7 +62,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void update(int id, String newName, String newCategoryName, String newBrandName, int newStock, int newPrice, String newLocation) throws IOException {
+    public void update(int id, String newName, String newCategoryName, String newBrandName, int newStock, Double newPrice, String newLocation) throws IOException {
         Sheet sheet = connection.getSheet("Producto");
         boolean updated = false;
 
@@ -112,7 +112,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 String categoryName = row.getCell(2).getStringCellValue();
                 String brandName = row.getCell(3).getStringCellValue();
                 int stock = (int) row.getCell(4).getNumericCellValue();
-                int price = (int) row.getCell(5).getNumericCellValue();
+                Double price = (Double) row.getCell(5).getNumericCellValue();
                 String location = row.getCell(6).getStringCellValue();
                 return new Product(id, name, categoryName, brandName, stock, price,location);
             }

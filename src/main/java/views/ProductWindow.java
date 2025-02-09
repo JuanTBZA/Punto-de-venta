@@ -136,7 +136,7 @@ public class ProductWindow extends JFrame {
                 String category = values.get("Categoria");
                 String brand = values.get("Marca");
                 int stock = Integer.parseInt(values.get("Stock"));
-                int price = Integer.parseInt(values.get("Precio"));
+                Double price = Double.valueOf(values.get("Precio"));
                 String location = values.get("Ubicacion");
 
                 controller.addProduct(name, category, brand, stock, price, location);
@@ -155,7 +155,7 @@ public class ProductWindow extends JFrame {
             String currentCategory = (String) tableModel.getValueAt(selectedRow, 2);
             String currentBrand = (String) tableModel.getValueAt(selectedRow, 3);
             int currentStock = (int) tableModel.getValueAt(selectedRow, 4);
-            int currentPrice = (int) tableModel.getValueAt(selectedRow, 5);
+            Double currentPrice = (Double) tableModel.getValueAt(selectedRow, 5);
             String currentLocation = (String) tableModel.getValueAt(selectedRow, 6);
 
             List<String> categoriesArray = new ArrayList<>();  // Usamos ArrayList en lugar de un arreglo fijo
@@ -200,7 +200,7 @@ public class ProductWindow extends JFrame {
                     String newCategory = values.get("Categoria");
                     String newBrand = values.get("Marca");
                     int newStock = Integer.parseInt(values.get("Stock"));
-                    int newPrice = Integer.parseInt(values.get("Precio"));
+                    Double newPrice = Double.valueOf(values.get("Precio"));
                     String newLocation = values.get("Ubicacion");
 
                     controller.updateProduct(id, newName, newCategory, newBrand, newStock, newPrice, newLocation);

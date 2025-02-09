@@ -21,12 +21,12 @@ public class ProductController {
         return service.getAllProducts();
     }
 
-    public void addProduct(String name, String categoryName, String brandName, int stock, int price, String location) throws IOException {
+    public void addProduct(String name, String categoryName, String brandName, int stock, Double price, String location) throws IOException {
         Product newProduct = new Product(0, name, categoryName, brandName, stock, price, location); // El ID se asignará automáticamente
         service.addProduct(newProduct);
     }
 
-    public void updateProduct(int id, String newName, String categoryName, String brandName, int newStock, int newPrice, String newLocation) throws IOException {
+    public void updateProduct(int id, String newName, String categoryName, String brandName, int newStock, Double newPrice, String newLocation) throws IOException {
         service.updateProduct(id, newName, categoryName, brandName, newStock, newPrice, newLocation);
         System.out.println("Product updated successfully!");
     }

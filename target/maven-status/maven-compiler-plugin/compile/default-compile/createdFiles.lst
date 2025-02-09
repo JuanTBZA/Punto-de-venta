@@ -1,4 +1,5 @@
 models\Category.class
+views\SalesWindow$3.class
 repositories\CategoryRepositoryImpl.class
 repositories\ClientRepository.class
 services\ProductServiceImpl.class
@@ -12,6 +13,7 @@ models\Sale.class
 views\CategoryWindow.class
 services\ClientServiceImpl.class
 views\EntityDialog.class
+views\SalesWindow$2.class
 models\Client.class
 services\CategoryService.class
 repositories\CategoryRepository.class
@@ -24,6 +26,7 @@ models\Product.class
 views\ClientWindow.class
 controllers\ClientController.class
 utilities\ExcelDatabaseConnection.class
+views\SalesWindow$1.class
 services\CategoryServiceImpl.class
 views\ProductWindow.class
 views\MainApplication.class
